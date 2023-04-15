@@ -1,0 +1,8 @@
+import os
+
+# ENVIRONMENT VARIABLES
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+
+# OTHER PROJECT VARIABLES
+REDIRECT_URI = "http://127.0.0.1:5000/callback/"
