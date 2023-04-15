@@ -1,1 +1,10 @@
 .python-version
+
+#Notebooks stuff
+notebooks
+
+#environment variables
+.env
+
+#cache
+__pycache__
