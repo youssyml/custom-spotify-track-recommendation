@@ -42,6 +42,16 @@ def callback():
         "grant_type": "authorization_code",
     }
 
-    response = requests.post(url=spotify_token_url, headers=headers, data=data)
+    response_token = requests.post(
+        url=spotify_token_url, headers=headers, data=data
+    ).json()
 
-    return response.json()
+    access_token = response_token.get("access_token")
+
+    # getting user saved tracks
+    saved_tracks_response = requests.get(
+        url="https://api.spotify.com/v1/me/tracks",
+        headers={"Authorization": f"Bearer {access_token}"},
+    ).json()
+
+    return saved_tracks_response
