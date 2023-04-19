@@ -8,3 +8,6 @@ notebooks
 
 #cache
 __pycache__
+
+#data
+training-data

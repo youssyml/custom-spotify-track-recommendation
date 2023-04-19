@@ -1,8 +1,10 @@
-from flask import Flask
-from flask import redirect, request
+import csv
 import requests
 import base64
+from flask import Flask
+from flask import redirect, request
 from .params import *
+from .utils import save_playlist_data
 
 
 app = Flask(__name__)
@@ -36,6 +38,7 @@ def callback():
         + base64.b64encode(client_str.encode("ascii")).decode("utf-8"),
         "Content-Type": "application/x-www-form-urlencoded",
     }
+
     data = {
         "code": request.args.get("code"),
         "redirect_uri": REDIRECT_URI,
@@ -48,10 +51,25 @@ def callback():
 
     access_token = response_token.get("access_token")
 
-    # getting user saved tracks
-    saved_tracks_response = requests.get(
-        url="https://api.spotify.com/v1/me/tracks",
+    # getting user likes and dislikes playlists
+    likes_tracks = requests.get(
+        url=f"https://api.spotify.com/v1/playlists/{LIKES_PLAYLIST_ID}/tracks",
         headers={"Authorization": f"Bearer {access_token}"},
     ).json()
 
-    return saved_tracks_response
+    dislikes_tracks = requests.get(
+        url=f"https://api.spotify.com/v1/playlists/{DISLIKES_PLAYLIST_ID}/tracks",
+        headers={"Authorization": f"Bearer {access_token}"},
+    ).json()
+
+    # Writing data in .csv files
+    for t in [
+        ("likes", save_playlist_data(likes_tracks)),
+        ("dislikes", save_playlist_data(dislikes_tracks)),
+    ]:
+        with open(f"training-data/{t[0]}.csv", mode="w", encoding="utf-8") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=t[1][0].keys())
+            writer.writeheader()
+            writer.writerows(t[1])
+
+    return "<p> Fetching data and creating the files </p>"
