@@ -1,6 +1,7 @@
 import csv
 import requests
 import base64
+import pandas as pd
 from flask import Flask
 from flask import redirect, request
 from .params import *
@@ -51,25 +52,21 @@ def callback():
 
     access_token = response_token.get("access_token")
 
-    # getting user likes and dislikes playlists
-    likes_tracks = requests.get(
-        url=f"https://api.spotify.com/v1/playlists/{LIKES_PLAYLIST_ID}/tracks",
-        headers={"Authorization": f"Bearer {access_token}"},
-    ).json()
+    # Getting all saved tracks
+    next_page_url = "https://api.spotify.com/v1/me/tracks"
+    saved_tracks = []
+    while next_page_url:
+        tracks = requests.get(
+            url=next_page_url,
+            headers={"Authorization": f"Bearer {access_token}"},
+            params={"limit": 50},
+        ).json()
+        for track in tracks.get("items"):
+            saved_tracks.append(
+                {"added_at": track.get("added_at"), "id": track.get("track").get("id")}
+            )
+        next_page_url = tracks.get("next")
 
-    dislikes_tracks = requests.get(
-        url=f"https://api.spotify.com/v1/playlists/{DISLIKES_PLAYLIST_ID}/tracks",
-        headers={"Authorization": f"Bearer {access_token}"},
-    ).json()
-
-    # Writing data in .csv files
-    for t in [
-        ("likes", save_playlist_data(likes_tracks)),
-        ("dislikes", save_playlist_data(dislikes_tracks)),
-    ]:
-        with open(f"training-data/{t[0]}.csv", mode="w", encoding="utf-8") as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=t[1][0].keys())
-            writer.writeheader()
-            writer.writerows(t[1])
+    pd.DataFrame(saved_tracks).to_csv("training-data/saved.csv", index=False)
 
     return "<p> Fetching data and creating the files </p>"

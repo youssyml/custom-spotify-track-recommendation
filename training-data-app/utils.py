@@ -1,6 +1,6 @@
 from google.cloud import storage
 import os
-from params import *
+from .params import *
 
 
 def save_playlist_data(playlist: dict) -> list:
