@@ -5,9 +5,13 @@ notebooks
 
 #environment variables
 .env
+infra/terraform.tfvars
 
 #cache
 __pycache__
 
 #data
 training-data
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/.terraform/providers/registry.terraform.io/hashicorp/google/4.62.1/darwin_arm64/terraform-provider-google_v4.62.1_x5
