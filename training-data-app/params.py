@@ -4,8 +4,6 @@ import os
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
-MODE = os.getenv("MODE")
-
 # GOOGLE CLOUD VARIABLES
 GCP_BUCKET_NAME = os.getenv("GCP_RAW_BUCKET")
 PATH_TO_CREDENTIALS = os.getenv("PATH_TO_CREDENTIALS")

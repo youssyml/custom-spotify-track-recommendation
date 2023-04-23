@@ -4,8 +4,8 @@ import base64
 import pandas as pd
 from flask import Flask
 from flask import redirect, request
-from utils.params import *
-from utils.utils import get_token_authorization
+from .params import *
+from .utils import get_token_authorization
 
 
 app = Flask(__name__)
