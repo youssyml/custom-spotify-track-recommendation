@@ -4,8 +4,8 @@ import base64
 import pandas as pd
 from flask import Flask
 from flask import redirect, request
-from .params import *
-from .utils import save_playlist_data
+from utils.params import *
+from utils.utils import get_token_authorization
 
 
 app = Flask(__name__)
@@ -29,28 +29,7 @@ def index():
 
 @app.route("/callback/")
 def callback():
-    # getting the token from spotify API
-    spotify_token_url = "https://accounts.spotify.com/api/token"
-
-    client_str = CLIENT_ID + ":" + CLIENT_SECRET
-
-    headers = {
-        "Authorization": "Basic "
-        + base64.b64encode(client_str.encode("ascii")).decode("utf-8"),
-        "Content-Type": "application/x-www-form-urlencoded",
-    }
-
-    data = {
-        "code": request.args.get("code"),
-        "redirect_uri": REDIRECT_URI,
-        "grant_type": "authorization_code",
-    }
-
-    response_token = requests.post(
-        url=spotify_token_url, headers=headers, data=data
-    ).json()
-
-    access_token = response_token.get("access_token")
+    access_token = get_token_authorization(request.args.get("code"))
 
     # Getting all saved tracks
     next_page_url = "https://api.spotify.com/v1/me/tracks"
