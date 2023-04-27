@@ -4,4 +4,6 @@ The goal of this project is to upskill myself on key technologies for a Machine 
 
 ## Repository structure
 - training-data-app: app to fetch training data from user spotify profile
-- infra: code to manage the project's infrastructure on Google Cloud
+- infra: code to create the project's infrastructure on Google Cloud using Terraform and shell scripts
+- dags: Airflow DAG code to fetch and process spotify track data
+- helm: Docker image and configuration for deploying airflow using helm on GKE

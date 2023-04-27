@@ -21,3 +21,6 @@ logs
 plugins
 dags/data
 docker-compose.yaml
+helm/spotify-secret.yaml
+infra/terraform.tfstate.backup
+infra/.terraform/
