@@ -1,4 +1,4 @@
-from airflow.decorators import dag, task
+from airflow.decorators import dag
 from datetime import datetime
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from tasks import get_tracks_features
