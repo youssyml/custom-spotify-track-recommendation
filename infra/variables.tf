@@ -6,3 +6,4 @@ variable "region" {
 variable "zone" {
   default = "europe-west3-a"
 }
+variable "project_number" {}
