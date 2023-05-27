@@ -1,7 +1,7 @@
 from airflow.decorators import dag
 from datetime import datetime
 from airflow.providers.postgres.operators.postgres import PostgresOperator
-from tasks import get_tracks_features
+from tasks import get_tracks_features, get_tracks_genres
 
 
 @dag(
@@ -17,7 +17,26 @@ def process_tracks():
         sql="sql/tracks_schema.sql",
     )
 
-    create_tracks_table >> get_tracks_features()
+    create_genres_table = PostgresOperator(
+        task_id="create_genres_table",
+        postgres_conn_id="spotify_pg_conn",
+        sql="sql/genres_schema.sql",
+    )
+
+    create_tracks_genres_table = PostgresOperator(
+        task_id="create_tracks_genres_table",
+        postgres_conn_id="spotify_pg_conn",
+        sql="sql/tracks_genres_schema.sql",
+    )
+    (
+        [
+            create_tracks_table,
+            create_genres_table,
+            create_tracks_genres_table,
+        ]
+        >> get_tracks_features()
+        >> get_tracks_genres()
+    )
 
 
 process_tracks()
